@@ -1,0 +1,22 @@
+<h1>우리 중화요리 집</h1>
+
+<div>
+    <a href="{% url 'chinese:chinese_index' %}">제품등록</a>
+</div>
+<div>
+    <h3>카테고리</h3>
+    <ul>
+        {% for cate in category %}
+        <li>{{cate.name}}</li>
+        {% endfor %}
+    </ul>
+</div>
+<div>
+    <h3>음식</h3>
+    {% for f in food %}
+    <a href="{% url 'chinese:food_detail' pk=f.id %}">
+        <img src="{{ f.image_url }}">
+        <h5>{{ f.name }}</h5>
+    </a>
+    {% endfor %}
+</div>
