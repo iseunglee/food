@@ -1,0 +1,67 @@
+<h1>food detail</h1>
+
+
+<div class="container my-5">
+    <h1 class="display-4 mb-3">{{ object.category.name }}</h1>
+    <h2 class="mb-2">{{ object.name }}</h2>
+    <h3 class="text-muted mb-3">{{ object.price }}원</h3>
+    <img src="{{ object.image_url }}" alt="{{ object.name }}" class="product-image mb-3">
+    <p>{{ object.description }}</p>
+</div>
+
+<div  class="container">
+    <input type="hidden" id="csrfToken" value="{{csrf_token}}">
+    <button type="button" onclick="modifyCartAmount({{object.id}}, 1)">담기</button>
+    <button type="button" onclick="modifyCartAmount({{object.id}}, -1)">빼기</button>
+<div>
+    현재 수량 : <span id="currentQuantity"></span>
+</div>
+</div>
+<!--
+<div>
+    input의 type 인자를 hidden을 이용하여 보내는 방법
+    request에서 받아야함
+    {# <form action="{% url 'customer:add_cart'  %}"> #}
+    {#    <input type="hidden" name="food_id" value="{{object.id}}"> #}
+        <button type="submit">담기</button>
+    </form>
+    인자로 보내는 방법, url에서 받아서 연계, url: add_cart/<int:pk>/ 이런 형태
+    {# <form action="{% url 'customer:add_cart'  %}"> #}
+    {#    <input type="hidden" name="food_id" value="{{object.id}}"> #}
+    {#    <buttom type="submit">담기</buttom> #}
+    {#</form> #}
+</div>
+
+<div>
+{#    <form action="{% url 'customer:remove_cart'  %}"> #}
+{#        <input type="hidden" name="food_id" value="{{object.id}}"> #}
+        <button type="submit">빼기</button>
+    </form>
+</div>
+
+<div>
+{#    {{object.cart_set.all.0.amount}} #}
+</div>-->
+
+<script>
+    function getCsrfToken(){
+        return document.getElementById('csrfToken').value;
+    }
+    function modifyCartAmount(food_id, change){
+        var xhr = new XMLHttpRequest();
+            xhr.open('POST', '{% url "customer:modify_cart" %}', true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.setRequestHeader('X-CSRFToken', getCsrfToken());
+
+            xhr.onload = function() {
+                if (this.status === 200) {
+                    var response = JSON.parse(this.responseText);
+                    document.getElementById('currentQuantity').textContent = response.newQuantity;
+                    console.log('Update successful:', response.message);
+                } else {
+                    console.error('Error updating:', this.statusText);
+                }
+            };
+            xhr.send(`foodId=${food_id}&amountChange=${change}`);
+    }
+</script>

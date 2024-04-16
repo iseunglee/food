@@ -1,0 +1,19 @@
+<h1>고객페이지에 오신 것을 환영합니다.</h1>
+
+<title>중화요리집</title>
+
+
+
+<div>
+    <h3>카테고리</h3>
+    <ul>
+        {% for cate in category %}
+        <li>{{cate.name}}</li>
+            {% for food in cate.food_set.all %}
+            <a href="{% url 'customer:food_detail' pk=food.id %}">
+                <img src="{{ food.image_url }}">
+                <h5>{{ food.name }}</h5>
+            {% endfor %}
+        {% endfor %}
+    </ul>
+</div>
